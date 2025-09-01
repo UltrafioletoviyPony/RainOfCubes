@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1550814440453746031}
   - component: {fileID: -96215671756204995}
   - component: {fileID: -3571793039058961804}
-  - component: {fileID: 8223486338013832150}
+  - component: {fileID: 7964763772963417717}
   m_Layer: 0
-  m_Name: OriginalWall
+  m_Name: OriginalPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,7 +160,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8223486338013832150
+--- !u!114 &7964763772963417717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,6 +169,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4160629574001611690}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a80f08290b3ce4d8e660b1f97746c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 82f0aee395bf7744fb897199cc4e8669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
