@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -11,6 +12,7 @@ public class Spawner : MonoBehaviour
     private GameObject _cubesParent;
     private float _repeatRate = 1.0f;
     private float _offsetPossition = 3;
+    private Coroutine _coroutine;
 
 
     private void Awake()
@@ -21,14 +23,19 @@ public class Spawner : MonoBehaviour
             createFunc: () => CreateCube(),
             actionOnGet: (cube) => GetCube(cube),
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
-            actionOnDestroy: (cube) => Destroy(cube),
+            actionOnDestroy: (cube) => DestroyCube(cube),
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize);
     }
 
-    private void Start() =>
-        InvokeRepeating(nameof(GetCubes), 0f, _repeatRate);
+    private void Start()
+    {
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        _coroutine = StartCoroutine(nameof(SpawnRepeating));
+    }
 
     private Cube CreateCube()
     {
@@ -41,6 +48,12 @@ public class Spawner : MonoBehaviour
     {
         cube.gameObject.transform.position = CreateRandomPosition();
         cube.gameObject.SetActive(true);
+    }
+
+    private void DestroyCube(Cube cube)
+    {
+        cube.Release -= ReleaseCube;
+        Destroy(cube.gameObject);
     }
 
     private void GetCubes()
@@ -71,5 +84,16 @@ public class Spawner : MonoBehaviour
                                     );
 
         return randomPosition;
+    }
+
+    private IEnumerator SpawnRepeating()
+    {
+        bool isRuned = true;
+
+        while (isRuned)
+        {
+            GetCubes();
+            yield return new WaitForSeconds(_repeatRate);
+        }
     }
 }

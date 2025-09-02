@@ -5,12 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider), typeof(Rigidbody), typeof(MeshRenderer))]
 public class Cube : MonoBehaviour
 {
+    private Renderer _renderer;
+    private Rigidbody _rigidbody;
+
     private Coroutine _coroutine;
     private int _minTime = 2;
     private int _maxTime = 5;
     private bool _isCollided;
 
     public event Action<Cube> Release;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.linearVelocity = Vector3.zero;
+    }
 
     private void Start() =>
         ResetToDefault();
@@ -20,7 +30,7 @@ public class Cube : MonoBehaviour
         if (_isCollided == false && collision.gameObject.TryGetComponent(out Platform platform))
         {
             _isCollided = true;
-            this.gameObject.GetComponent<Renderer>().material.color = Color.red;
+            _renderer.material.color = Color.red;
 
             if (_coroutine != null)
                 StopCoroutine(_coroutine);
@@ -31,16 +41,16 @@ public class Cube : MonoBehaviour
 
     private void ResetToDefault()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = Color.green;
-        this.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        _renderer.material.color = Color.green;
         _isCollided = false;
     }
 
     private IEnumerator CountdownToRelease()
     {
         float elapsedTime = 0f;
+        float coundounTime = UnityEngine.Random.Range(_minTime, _maxTime + 1);
 
-        while (elapsedTime < UnityEngine.Random.Range(_minTime, _maxTime + 1))
+        while (elapsedTime < coundounTime)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
