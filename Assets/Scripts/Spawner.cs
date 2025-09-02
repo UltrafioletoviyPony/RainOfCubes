@@ -9,19 +9,18 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int _poolMaxSize = 5;
 
     private ObjectPool<Cube> _pool;
-    private GameObject _cubesParent;
     private float _repeatRate = 1.0f;
     private float _offsetPossition = 3;
     private Coroutine _coroutine;
-
+    private WaitForSeconds _waitForSeconds;
 
     private void Awake()
     {
-        _cubesParent = new GameObject(name: "Cubes");
+        _waitForSeconds = new WaitForSeconds(_repeatRate);
 
         _pool = new ObjectPool<Cube>(
             createFunc: () => CreateCube(),
-            actionOnGet: (cube) => GetCube(cube),
+            actionOnGet: (cube) => SetCube(cube),
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
             actionOnDestroy: (cube) => DestroyCube(cube),
             collectionCheck: true,
@@ -39,12 +38,12 @@ public class Spawner : MonoBehaviour
 
     private Cube CreateCube()
     {
-        Cube cube = Instantiate(_cubePrefab, _cubesParent.transform);
+        Cube cube = Instantiate(_cubePrefab);
         cube.Release += ReleaseCube;
         return cube;
     }
 
-    private void GetCube(Cube cube)
+    private void SetCube(Cube cube)
     {
         cube.gameObject.transform.position = CreateRandomPosition();
         cube.gameObject.SetActive(true);
@@ -56,7 +55,7 @@ public class Spawner : MonoBehaviour
         Destroy(cube.gameObject);
     }
 
-    private void GetCubes()
+    private void SetCubes()
     {
         int cubeCount = 0;
 
@@ -92,8 +91,8 @@ public class Spawner : MonoBehaviour
 
         while (isRuned)
         {
-            GetCubes();
-            yield return new WaitForSeconds(_repeatRate);
+            SetCubes();
+            yield return _waitForSeconds;
         }
     }
 }

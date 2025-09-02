@@ -3,10 +3,12 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(Rigidbody), typeof(MeshRenderer))]
+[RequireComponent(typeof(ColorChanger))]
 public class Cube : MonoBehaviour
 {
     private Renderer _renderer;
     private Rigidbody _rigidbody;
+    private ColorChanger _colorChanger;
 
     private Coroutine _coroutine;
     private int _minTime = 2;
@@ -17,6 +19,7 @@ public class Cube : MonoBehaviour
 
     private void Awake()
     {
+        _colorChanger = GetComponent<ColorChanger>();
         _renderer = GetComponent<Renderer>();
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.linearVelocity = Vector3.zero;
@@ -30,7 +33,7 @@ public class Cube : MonoBehaviour
         if (_isCollided == false && collision.gameObject.TryGetComponent(out Platform platform))
         {
             _isCollided = true;
-            _renderer.material.color = Color.red;
+            _colorChanger.SetColor(_renderer, Color.red);
 
             if (_coroutine != null)
                 StopCoroutine(_coroutine);
@@ -41,7 +44,7 @@ public class Cube : MonoBehaviour
 
     private void ResetToDefault()
     {
-        _renderer.material.color = Color.green;
+        _colorChanger.SetColor(_renderer, Color.green);
         _isCollided = false;
     }
 
